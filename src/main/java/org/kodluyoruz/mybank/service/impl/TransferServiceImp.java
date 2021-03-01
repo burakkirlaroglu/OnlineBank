@@ -3,8 +3,10 @@ package org.kodluyoruz.mybank.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.kodluyoruz.mybank.dto.TransferDto;
 import org.kodluyoruz.mybank.entity.Account;
+import org.kodluyoruz.mybank.exception.accountException.MoneyCanNotTransferred;
 import org.kodluyoruz.mybank.external.ExchangeRates;
 import org.kodluyoruz.mybank.entity.Transfer;
+import org.kodluyoruz.mybank.external.Messages;
 import org.kodluyoruz.mybank.repository.AccountRepository;
 import org.kodluyoruz.mybank.repository.TransferRepository;
 import org.kodluyoruz.mybank.service.TransferService;
@@ -129,7 +131,7 @@ public class TransferServiceImp extends NumberEvents implements TransferService 
                 }
         }else if (senderIban.equals(accountSend.getIban()) & receiverIban.equals(accountTake.getIban()) &
                 accountSend.getAccountType().equals("SAVING")){
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "You can not send money from saving account");
+            throw new MoneyCanNotTransferred(Messages.Error.NOT_ENOUGH_MONEY_IN_YOUR_ACCOUNT.message);
         }
         accountRepository.save(accountSend);
         accountRepository.save(accountTake);

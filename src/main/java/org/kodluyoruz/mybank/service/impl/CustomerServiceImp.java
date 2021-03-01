@@ -4,16 +4,16 @@ import org.kodluyoruz.mybank.dto.CustomerDto;
 import org.kodluyoruz.mybank.entity.Account;
 import org.kodluyoruz.mybank.entity.Card;
 import org.kodluyoruz.mybank.entity.Customer;
+import org.kodluyoruz.mybank.exception.customerException.CustomerNotDeletedException;
 import org.kodluyoruz.mybank.repository.CustomerRepository;
 import org.kodluyoruz.mybank.service.CustomerService;
 import org.kodluyoruz.mybank.transformer.CustomerTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
+import org.kodluyoruz.mybank.external.Messages;
 
 
 @Service
@@ -74,6 +74,7 @@ public class CustomerServiceImp implements CustomerService {
 
         if (accountBalanceCheck(customer) & cardDebtCheck(customer)){
             customerRepository.deleteById(id);
+
         }
     }
 
@@ -81,7 +82,7 @@ public class CustomerServiceImp implements CustomerService {
         for (int i = 0; i < customer.getAccounts().size(); i++) {
             Account account = customer.getAccounts().get(i);
             if (account.getBalance() > 0){
-                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Customer has money in her/him account");
+                throw new CustomerNotDeletedException(Messages.Error.ACCOUNT_COULD_NOT_DELETED_BECAUSE_HAVE_MONEY_IN_YOUR_ACCOUNT.message);
             }
         }
         return true;
@@ -91,7 +92,7 @@ public class CustomerServiceImp implements CustomerService {
         for (int i = 0; i < customer.getCards().size(); i++) {
             Card card = customer.getCards().get(i);
             if (card.getCardDebt() > 0){
-                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Customer has card debt");
+                throw new CustomerNotDeletedException(Messages.Error.CARD_COULD_NOT_DELETED.message);
             }
         }
         return true;

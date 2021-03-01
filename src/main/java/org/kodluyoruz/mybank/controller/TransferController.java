@@ -42,11 +42,6 @@ public class TransferController {
     @PostMapping(value = "/iban")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Transfer sendMoney(@RequestBody TransferDto transferDto, @Param(value = "sender") String iban1, @Param(value = "receiver") String iban2){
-        try {
             return transferService.sendMoney(transferDto, iban1, iban2);
-        }catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Send money process is not completed from "+iban1+" to "+iban2);
-        }
     }
-
 }

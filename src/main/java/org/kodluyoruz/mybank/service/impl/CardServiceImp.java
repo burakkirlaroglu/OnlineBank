@@ -1,6 +1,5 @@
 package org.kodluyoruz.mybank.service.impl;
 
-import lombok.RequiredArgsConstructor;
 import org.kodluyoruz.mybank.dto.CardDto;
 import org.kodluyoruz.mybank.entity.Account;
 import org.kodluyoruz.mybank.entity.Card;
